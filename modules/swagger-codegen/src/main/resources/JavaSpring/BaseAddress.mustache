@@ -1,0 +1,107 @@
+package {{baseModelPackage}};
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+/**
+ * Created by famecrave on {{generatedDate}}.
+ */
+@MappedSuperclass
+public abstract class BaseAddress extends BaseModel {
+    @Column(name = "address1")
+    @JsonProperty("address1")
+    @SerializedName("address1")
+    protected String address1 = null;
+
+    @Column(name = "address2")
+    @JsonProperty("address2")
+    @SerializedName("address2")
+    protected String address2 = null;
+
+    @Column(name = "city")
+    @JsonProperty("city")
+    @SerializedName("city")
+    protected String city = null;
+
+    @Column(name = "state")
+    @JsonProperty("state")
+    @SerializedName("state")
+    protected String state = null;
+
+    @Column(name = "zip")
+    @JsonProperty("zip")
+    @SerializedName("zip")
+    protected String zip = null;
+
+    @Column(name = "phone")
+    @JsonProperty("phone")
+    @SerializedName("phone")
+    protected String phone = null;
+
+    @Column(name = "fax")
+    @JsonProperty("fax")
+    @SerializedName("fax")
+    protected String fax = null;
+
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+
+}

@@ -50,6 +50,15 @@ public class CodegenProperty implements Cloneable {
     public boolean hasValidation; // true if pattern, maximum, etc are set (only used in the mustache template)
     public boolean isInherited;
     public String nameInCamelCase; // property name in camel case
+    public String nameInSnakeCase; // property name in snake case
+    public String nameInSnakeCaseSingular;
+    public Boolean isId; // property to check if the column is Id
+    public Boolean isColumnAnnotation; // property to check to see if to generate hibernate column annotation
+    public Boolean isOneToManyAnnotation;
+    public Boolean isManyToOneAnnotation;
+    public Boolean isOneToOneAnnotation;
+    public Boolean isNoAnnotation;
+    public Boolean isTransient;
     // enum name based on the property name, usually use as a prefix (e.g. VAR_NAME) for enum name (e.g. VAR_NAME_VALUE1)
     public String enumName;
     public Integer maxItems;

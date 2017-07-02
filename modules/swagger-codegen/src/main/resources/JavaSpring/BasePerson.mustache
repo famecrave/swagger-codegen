@@ -1,0 +1,57 @@
+package {{baseModelPackage}};
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+/**
+ * Created by famecrave on {{generatedDate}}.
+ */
+@MappedSuperclass
+public class BasePerson extends BaseModel {
+    @Column(name = "full_name")
+    @JsonProperty("full_name")
+    @SerializedName("full_name")
+    protected String fullName = null;
+
+    @Column(name = "first_name")
+    @JsonProperty("first_name")
+    @SerializedName("first_name")
+    protected String firstName = null;
+
+    @Column(name = "last_name")
+    @JsonProperty("last_name")
+    @SerializedName("last_name")
+    protected String lastName = null;
+
+    @Column(name = "middle_name")
+    @JsonProperty("middle_name")
+    @SerializedName("middle_name")
+    protected String middleName = null;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+}

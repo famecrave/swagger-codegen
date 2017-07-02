@@ -3,23 +3,49 @@ package io.swagger.codegen;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import io.swagger.codegen.ignore.CodegenIgnoreProcessor;
-import io.swagger.codegen.utils.ImplementationVersion;
 import io.swagger.codegen.languages.AbstractJavaCodegen;
-import io.swagger.models.*;
+import io.swagger.codegen.utils.ImplementationVersion;
+import io.swagger.models.ComposedModel;
+import io.swagger.models.Contact;
+import io.swagger.models.Info;
+import io.swagger.models.License;
+import io.swagger.models.Model;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.RefModel;
+import io.swagger.models.SecurityRequirement;
+import io.swagger.models.Swagger;
 import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.util.Json;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.*;
-
-import org.apache.commons.lang3.StringUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class DefaultGenerator extends AbstractGenerator implements Generator {
     protected final Logger LOGGER = LoggerFactory.getLogger(DefaultGenerator.class);
@@ -331,6 +357,35 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
 
         // post process all processed models
         allProcessedModels = config.postProcessAllModels(allProcessedModels);
+
+        //NSK:Generate BaseModels
+        try {
+            String baseModelFileName = config.modelFileFolder() + File.separator + "base" + File.separator + "BaseModel.java";
+            processTemplateToFile(config.additionalProperties(), "BaseModel.mustache", baseModelFileName);
+
+            String basePersonModelFileName = config.modelFileFolder() + File.separator + "base" + File.separator + "BasePerson.java";
+            processTemplateToFile(config.additionalProperties(), "BasePerson.mustache", basePersonModelFileName);
+
+            String baseAddressModelFileName = config.modelFileFolder() + File.separator + "base" + File.separator + "BaseAddress.java";
+            processTemplateToFile(config.additionalProperties(), "BaseAddress.mustache", baseAddressModelFileName );
+
+            String appConfigFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "config" + File.separator + "AppConfig.java";
+            processTemplateToFile(config.additionalProperties(), "AppConfig.mustache", appConfigFileName );
+
+            String utilConfigFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "config" + File.separator + "UtilConfig.java";
+            processTemplateToFile(config.additionalProperties(), "UtilConfig.mustache", utilConfigFileName );
+
+            String corsFilterFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "config" + File.separator + "CorsFilter.java";
+            processTemplateToFile(config.additionalProperties(), "CorsFilter.mustache", corsFilterFileName );
+
+            String jsonDataSerializerFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "util" + File.separator + "CustomJSONDateSerializer.java";
+            processTemplateToFile(config.additionalProperties(), "CustomJSONDateSerializer.mustache", jsonDataSerializerFileName );
+
+            String jsonDataDeserializerFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "util" + File.separator + "CustomJSONDateDeserializer.java";
+            processTemplateToFile(config.additionalProperties(), "CustomJSONDateDeserializer.mustache", jsonDataDeserializerFileName  );
+        } catch (Exception e) {
+            System.out.println("<<<<<<<<<<<<<<<<<NSK:ERROR WHILE GENERATING CUSTOM CLASSES>>>>>>>>>>>>>>>>>>>>>>>>>");
+        }
 
         // generate files based on processed models
         for (String modelName: allProcessedModels.keySet()) {
@@ -679,7 +734,7 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
     }
 
     @Override
-    public List<File> generate() {
+    public List<File>  generate() {
 
         if (swagger == null || config == null) {
             throw new RuntimeException("missing swagger input or config!");

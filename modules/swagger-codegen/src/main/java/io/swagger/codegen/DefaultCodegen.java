@@ -3,7 +3,6 @@ package io.swagger.codegen;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.samskivert.mustache.Mustache.Compiler;
-
 import io.swagger.codegen.examples.ExampleGenerator;
 import io.swagger.models.ArrayModel;
 import io.swagger.models.ComposedModel;
@@ -607,7 +606,7 @@ public class DefaultCodegen {
      * @return properly-escaped pattern
      */
     public String toRegularExpression(String pattern) {
-        return addRegularExpressionDelimiter(escapeText(pattern));
+        return escapeText(addRegularExpressionDelimiter(pattern));
     }
 
     /**
@@ -1281,6 +1280,10 @@ public class DefaultCodegen {
         } else {
             m.name = name;
         }
+        m.tableName = io.swagger.codegen.utils.StringUtils.camelToSnakeCase(name);
+        m.singularTableName = m.tableName.substring(0, m.tableName.length() - 1);
+        m.noTableAnnotation = m.description != null && m.description.equals("DoNotAnnotate");
+
         m.title = escapeText(model.getTitle());
         m.description = escapeText(model.getDescription());
         m.unescapedDescription = model.getDescription();
@@ -1502,6 +1505,38 @@ public class DefaultCodegen {
         property.name = toVarName(name);
         property.baseName = name;
         property.nameInCamelCase = camelize(property.name, false);
+
+        property.nameInSnakeCase = io.swagger.codegen.utils.StringUtils.camelToSnakeCase(name);
+        property.nameInSnakeCaseSingular = property.nameInSnakeCase.substring(0, property.nameInSnakeCase.length() - 1);
+        property.isId = name.equalsIgnoreCase("id");
+        property.description = escapeText(p.getDescription());
+        property.isOneToManyAnnotation = false;
+        property.isManyToOneAnnotation = false;
+        property.isOneToOneAnnotation = false;
+        property.isTransient = false;
+        property.isNoAnnotation = false;
+        property.isColumnAnnotation = true;
+        if (property.description != null && property.description.equals("OneToMany")){
+            property.isOneToManyAnnotation = true;
+            property.isColumnAnnotation = false;
+        }
+        if (property.description!=null && property.description.equals("ManyToOne")) {
+            property.isManyToOneAnnotation = true;
+            property.isColumnAnnotation = false;
+        }
+        if (property.description!=null && property.description.equals("OneToOne")) {
+            property.isOneToOneAnnotation = true;
+            property.isColumnAnnotation = false;
+        }
+        if (property.description!=null && property.description.equals("Transient")) {
+            property.isTransient = true;
+            property.isColumnAnnotation = false;
+        }
+        if (property.description!=null && property.description.equals("DoNotAnnotate")) {
+            property.isNoAnnotation = true;
+            property.isColumnAnnotation = false;
+        }
+
         property.description = escapeText(p.getDescription());
         property.unescapedDescription = p.getDescription();
         property.title = p.getTitle();
@@ -2084,7 +2119,7 @@ public class DefaultCodegen {
         if (operation.getResponses() != null && !operation.getResponses().isEmpty()) {
             Response methodResponse = findMethodResponse(operation.getResponses());
 
-            for (Map.Entry<String, Response> entry : operation.getResponses().entrySet()) {
+            for (Entry<String, Response> entry : operation.getResponses().entrySet()) {
                 Response response = entry.getValue();
                 CodegenResponse r = fromResponse(entry.getKey(), response);
                 r.hasMore = true;
@@ -2678,8 +2713,8 @@ public class DefaultCodegen {
         }
 
         List<CodegenSecurity> secs = new ArrayList<CodegenSecurity>(schemes.size());
-        for (Iterator<Map.Entry<String, SecuritySchemeDefinition>> it = schemes.entrySet().iterator(); it.hasNext(); ) {
-            final Map.Entry<String, SecuritySchemeDefinition> entry = it.next();
+        for (Iterator<Entry<String, SecuritySchemeDefinition>> it = schemes.entrySet().iterator(); it.hasNext(); ) {
+            final Entry<String, SecuritySchemeDefinition> entry = it.next();
             final SecuritySchemeDefinition schemeDefinition = entry.getValue();
 
             CodegenSecurity sec = CodegenModelFactory.newInstance(CodegenModelType.SECURITY);
@@ -2726,7 +2761,7 @@ public class DefaultCodegen {
                 if (oauth2Definition.getScopes() != null) {
                     List<Map<String, Object>> scopes = new ArrayList<Map<String, Object>>();
                     int count = 0, numScopes = oauth2Definition.getScopes().size();
-                    for(Map.Entry<String, String> scopeEntry : oauth2Definition.getScopes().entrySet()) {
+                    for(Entry<String, String> scopeEntry : oauth2Definition.getScopes().entrySet()) {
                         Map<String, Object> scope = new HashMap<String, Object>();
                         scope.put("scope", scopeEntry.getKey());
                         scope.put("description", escapeText(scopeEntry.getValue()));
@@ -2829,7 +2864,7 @@ public class DefaultCodegen {
         }
 
         final List<Map<String, Object>> output = new ArrayList<Map<String, Object>>(examples.size());
-        for (Map.Entry<String, Object> entry : examples.entrySet()) {
+        for (Entry<String, Object> entry : examples.entrySet()) {
             final Map<String, Object> kv = new HashMap<String, Object>();
             kv.put("contentType", entry.getKey());
             kv.put("example", entry.getValue());
@@ -2840,7 +2875,7 @@ public class DefaultCodegen {
 
     private void addHeaders(Response response, List<CodegenProperty> target) {
         if (response.getHeaders() != null) {
-            for (Map.Entry<String, Property> headers : response.getHeaders().entrySet()) {
+            for (Entry<String, Property> headers : response.getHeaders().entrySet()) {
                 target.add(fromProperty(headers.getKey(), headers.getValue()));
             }
         }
@@ -2994,7 +3029,7 @@ public class DefaultCodegen {
     }
 
     private void addVars(CodegenModel m, Map<String, Property> properties, List<String> required,
-            Map<String, Property> allProperties, List<String> allRequired) {
+                         Map<String, Property> allProperties, List<String> allRequired) {
 
         m.hasRequired = false;
         if (properties != null && !properties.isEmpty()) {
@@ -3022,10 +3057,10 @@ public class DefaultCodegen {
 
     private void addVars(CodegenModel m, List<CodegenProperty> vars, Map<String, Property> properties, Set<String> mandatory) {
         // convert set to list so that we can access the next entry in the loop
-        List<Map.Entry<String, Property>> propertyList = new ArrayList<Map.Entry<String, Property>>(properties.entrySet());
+        List<Entry<String, Property>> propertyList = new ArrayList<Entry<String, Property>>(properties.entrySet());
         final int totalCount = propertyList.size();
         for (int i = 0; i < totalCount; i++) {
-            Map.Entry<String, Property> entry = propertyList.get(i);
+            Entry<String, Property> entry = propertyList.get(i);
             
             final String key = entry.getKey();
             final Property prop = entry.getValue();
@@ -3573,14 +3608,9 @@ public class DefaultCodegen {
      * @return the pattern with delimiter
      */
     public String addRegularExpressionDelimiter(String pattern) {
-        if (StringUtils.isEmpty(pattern)) {
-            return pattern;
+        if (pattern != null && !pattern.matches("^/.*")) {
+            return "/" + pattern + "/";
         }
-
-        if (!pattern.matches("^/.*")) {
-            return "/" + pattern.replaceAll("/", "\\\\/") + "/";
-        }
-
         return pattern;
     }
 

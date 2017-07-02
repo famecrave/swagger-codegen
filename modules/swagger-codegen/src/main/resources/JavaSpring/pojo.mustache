@@ -1,12 +1,14 @@
+{{^noTableAnnotation}}
+@Entity
+@Table(name = "{{tableName}}")
+@Proxy(lazy = false)
+{{/noTableAnnotation}}
 /**
- * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
- */{{#description}}
-@ApiModel(description = "{{{description}}}"){{/description}}
-{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#serializableModel}}implements Serializable{{/serializableModel}} {
+ * Created by famecrave on {{generatedDate}}.
+ */
+public class {{classname}} extends BaseModel {{#serializableModel}}implements Serializable{{/serializableModel}} {
 {{#serializableModel}}
   private static final long serialVersionUID = 1L;
-
 {{/serializableModel}}
   {{#vars}}
     {{#isEnum}}
@@ -21,12 +23,30 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
       {{/isContainer}}
       {{/items}}
     {{/items.isEnum}}
-  {{#jackson}}
-  @JsonProperty("{{baseName}}")
-  {{/jackson}}
-  {{#gson}}
-  @SerializedName("{{baseName}}")
-  {{/gson}}
+    {{#isColumnAnnotation}}
+    @Column(name = "{{nameInSnakeCase}}")
+    {{/isColumnAnnotation}}
+    {{#isOneToManyAnnotation}}
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="{{nameInSnakeCase}}_id")
+    {{/isOneToManyAnnotation}}
+    {{#isManyToOneAnnotation}}
+    @ManyToOne
+    @JoinColumn(name="{{nameInSnakeCase}}_id")
+    {{/isManyToOneAnnotation}}
+    {{#isOneToOneAnnotation}}
+    @OneToOne
+    @JoinColumn(name="{{nameInSnakeCase}}_id")
+    {{/isOneToOneAnnotation}}
+    {{#isTransient}}
+    @Transient
+    {{/isTransient}}
+    {{#jackson}}
+    @JsonProperty("{{nameInSnakeCase}}")
+    {{/jackson}}
+    {{#gson}}
+    @SerializedName("{{baseName}}")
+    {{/gson}}
   {{#isContainer}}
   private {{{datatypeWithEnum}}} {{name}}{{#required}} = {{{defaultValue}}}{{/required}}{{^required}} = null{{/required}};
   {{/isContainer}}
@@ -36,10 +56,6 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
 
   {{/vars}}
   {{#vars}}
-  public {{classname}} {{name}}({{{datatypeWithEnum}}} {{name}}) {
-    this.{{name}} = {{name}};
-    return this;
-  }
   {{#isListContainer}}
 
   public {{classname}} add{{nameInCamelCase}}Item({{{items.datatypeWithEnum}}} {{name}}Item) {
@@ -83,9 +99,8 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
  {{#vendorExtensions.extraAnnotation}}
   {{{vendorExtensions.extraAnnotation}}}
   {{/vendorExtensions.extraAnnotation}}
-  @ApiModelProperty({{#example}}example = "{{{example}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}{{#isReadOnly}}readOnly = {{{isReadOnly}}}, {{/isReadOnly}}value = "{{{description}}}")
-{{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}  public {{{datatypeWithEnum}}} {{getter}}() {
-    return {{name}};
+  public {{{datatypeWithEnum}}} {{getter}}() {
+    return this.{{name}};
   }
 
   public void {{setter}}({{{datatypeWithEnum}}} {{name}}) {

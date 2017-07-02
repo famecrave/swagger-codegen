@@ -1,13 +1,13 @@
 package io.swagger.codegen;
 
+import io.swagger.models.ExternalDocs;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Objects;
-
-import io.swagger.models.ExternalDocs;
 
 
 public class CodegenModel {
@@ -20,6 +20,9 @@ public class CodegenModel {
     public List<CodegenModel> children;
 
     public String name, classname, title, description, classVarName, modelJson, dataType;
+    public String tableName;
+    public String singularTableName;
+    public Boolean noTableAnnotation;
     public String classFilename; // store the class file name, mainly used for import
     public String unescapedDescription;
     public String discriminator;

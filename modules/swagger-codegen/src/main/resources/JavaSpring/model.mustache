@@ -1,5 +1,10 @@
 package {{package}};
 
+import org.hibernate.annotations.Proxy;
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+import {{baseModelPackage}}.*;
+
 import java.util.Objects;
 {{#imports}}import {{import}};
 {{/imports}}

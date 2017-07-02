@@ -1,0 +1,21 @@
+package {{configPackage}};
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Created by famecrave on {{generatedDate}}.
+ */
+@Configuration
+public class AppConfig {
+    @Value("${app.data.format}")
+    private String dateFormat;
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+}

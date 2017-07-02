@@ -1,0 +1,111 @@
+package {{baseModelPackage}};
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.annotations.SerializedName;
+import io.swagger.annotations.ApiModelProperty;
+
+import {{utilPackage}}.CustomJSONDateSerializer;
+import {{utilPackage}}.CustomJSONDateDeserializer;
+
+import javax.persistence.*;
+import java.util.Date;
+
+/**
+ * Created by famecrave on {{generatedDate}}.
+ */
+@MappedSuperclass
+public abstract class BaseModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @JsonProperty("id")
+    @SerializedName("id")
+    protected Long id = null;
+
+    @Column(name = "created_at")
+    @JsonProperty("created_at")
+    @SerializedName("created_at")
+    @JsonSerialize(using = CustomJSONDateSerializer.class)
+    @JsonDeserialize(using = CustomJSONDateDeserializer.class)
+    protected Date createdAt = null;
+
+    @Column(name = "status")
+    @JsonProperty("status")
+    @SerializedName("status")
+    protected StatusEnum status = null;
+
+    @Column(name = "status_by")
+    @JsonProperty("status_by")
+    @SerializedName("status_by")
+    protected String statusBy = null;
+
+    @Column(name = "status_at")
+    @JsonProperty("status_at")
+    @SerializedName("status_at")
+    @JsonSerialize(using = CustomJSONDateSerializer.class)
+    @JsonDeserialize(using = CustomJSONDateDeserializer.class)
+    protected Date statusAt = null;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * Get createdAt
+     * @return createdAt
+     **/
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * Get status
+     * @return status
+     **/
+    @ApiModelProperty(value = "")
+    public StatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEnum status) {
+        this.status = status;
+    }
+
+
+    /**
+     * User who changed the status
+     * @return statusBy
+     **/
+    @ApiModelProperty(value = "User who changed the status")
+    public String getStatusBy() {
+        return statusBy;
+    }
+
+    public void setStatusBy(String statusBy) {
+        this.statusBy = statusBy;
+    }
+
+    /**
+     * Status changed at
+     * @return statusAt
+     **/
+    @ApiModelProperty(value = "Status changed at")
+    public Date getStatusAt() {
+        return statusAt;
+    }
+
+    public void setStatusAt(Date statusAt) {
+        this.statusAt = statusAt;
+    }
+
+}
