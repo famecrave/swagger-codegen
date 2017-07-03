@@ -181,7 +181,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
                 supportingFiles.add(new SupportingFile("swagger2SpringBoot.mustache",
                         (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "Swagger2SpringBoot.java"));
                 supportingFiles.add(new SupportingFile("RFC3339DateFormat.mustache",
-                        (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "RFC3339DateFormat.java"));
+                        (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator) + File.separator + "util", "RFC3339DateFormat.java"));
                 supportingFiles.add(new SupportingFile("application.mustache",
                         ("src.main.resources").replace(".", java.io.File.separator), "application.properties"));
             }
@@ -210,17 +210,19 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
                 additionalProperties.put("useSpringCloudClient", true);
 
             } else {
-                apiTemplateFiles.put("apiController.mustache", "Controller.java");
+                //apiTemplateFiles.put("apiController.mustache", "Controller.java");
                 supportingFiles.add(new SupportingFile("apiException.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "ApiException.java"));
-                supportingFiles.add(new SupportingFile("apiResponseMessage.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "ApiResponseMessage.java"));
+                        (sourceFolder + File.separator + basePackage + File.separator + "exceptions" + File.separator).replace(".", java.io.File.separator), "ApiException.java"));
+                /*supportingFiles.add(new SupportingFile("apiResponseMessage.mustache",
+                        (sourceFolder + File.separator + basePackage + File.separator + "exceptions" + File.separator).replace(".", java.io.File.separator), "ApiResponseMessage.java"));*/
                 supportingFiles.add(new SupportingFile("notFoundException.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "NotFoundException.java"));
+                        (sourceFolder + File.separator + basePackage + File.separator + "exceptions" + File.separator).replace(".", java.io.File.separator), "NotFoundException.java"));
                 supportingFiles.add(new SupportingFile("apiOriginFilter.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "ApiOriginFilter.java"));
+                        (sourceFolder + File.separator + basePackage + File.separator + "config" + File.separator).replace(".", java.io.File.separator), "ApiOriginFilter.java"));
+/*
                 supportingFiles.add(new SupportingFile("swaggerDocumentationConfig.mustache",
                         (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "SwaggerDocumentationConfig.java"));
+*/
             }
         }
 

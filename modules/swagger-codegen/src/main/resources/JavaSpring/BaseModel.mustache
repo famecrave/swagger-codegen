@@ -1,6 +1,8 @@
 package {{baseModelPackage}};
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.annotations.SerializedName;
@@ -108,4 +110,42 @@ public abstract class BaseModel {
         this.statusAt = statusAt;
     }
 
+}
+
+enum StatusEnum {
+    ACTIVE("ACTIVE"),
+
+    INACTIVE("INACTIVE"),
+
+    DISABLE("DISABLE"),
+
+    CLAIMED("CLAIMED"),
+
+    PENDING("PENDING"),
+
+    REVIEW("REVIEW"),
+
+    DELETED("DELETED");
+
+    private String value;
+
+    StatusEnum(String value) {
+        this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+        for (StatusEnum b : StatusEnum.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }

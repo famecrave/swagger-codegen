@@ -18,7 +18,7 @@ public class CustomJSONDateSerializer extends StdSerializer<Date> {
     @Autowired
     private AppConfig appConfig;
 
-    private SimpleDateFormat formatter = new SimpleDateFormat();
+    private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
     public CustomJSONDateSerializer() {
         this(null);

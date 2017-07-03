@@ -18,7 +18,7 @@ public class CustomJSONDateDeserializer extends StdDeserializer<Date> {
     @Autowired
     private AppConfig appConfig;
 
-    private SimpleDateFormat formatter =  new SimpleDateFormat(appConfig.getDateFormat());
+    private SimpleDateFormat formatter =  new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
     public CustomJSONDateDeserializer() {
         this(null);

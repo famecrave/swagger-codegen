@@ -375,9 +375,6 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
             String utilConfigFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "config" + File.separator + "UtilConfig.java";
             processTemplateToFile(config.additionalProperties(), "UtilConfig.mustache", utilConfigFileName );
 
-            String corsFilterFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "config" + File.separator + "CorsFilter.java";
-            processTemplateToFile(config.additionalProperties(), "CorsFilter.mustache", corsFilterFileName );
-
             String jsonDataSerializerFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "util" + File.separator + "CustomJSONDateSerializer.java";
             processTemplateToFile(config.additionalProperties(), "CustomJSONDateSerializer.mustache", jsonDataSerializerFileName );
 
