@@ -358,7 +358,7 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
         // post process all processed models
         allProcessedModels = config.postProcessAllModels(allProcessedModels);
 
-        //NSK:Generate BaseModels
+        //famecrave:Generate custom classes
         try {
             String baseModelFileName = config.modelFileFolder() + File.separator + "base" + File.separator + "BaseModel.java";
             processTemplateToFile(config.additionalProperties(), "BaseModel.mustache", baseModelFileName);
@@ -380,8 +380,11 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
 
             String jsonDataDeserializerFileName = config.apiFileFolder() + File.separator + ".." + File.separator + "util" + File.separator + "CustomJSONDateDeserializer.java";
             processTemplateToFile(config.additionalProperties(), "CustomJSONDateDeserializer.mustache", jsonDataDeserializerFileName  );
+
+            String baseServiceFilename = config.modelFileFolder() + File.separator + ".." + File.separator + "service" + File.separator + "BaseService.java";
+            processTemplateToFile(config.additionalProperties(), "apiBaseService.mustache", baseServiceFilename);
         } catch (Exception e) {
-            System.out.println("<<<<<<<<<<<<<<<<<NSK:ERROR WHILE GENERATING CUSTOM CLASSES>>>>>>>>>>>>>>>>>>>>>>>>>");
+            System.out.println("<<<<<<<<<<<<<<<<<famecrave:ERROR WHILE GENERATING CUSTOM CLASSES>>>>>>>>>>>>>>>>>>>>>>>>>");
         }
 
         // generate files based on processed models
@@ -414,6 +417,21 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
                     if(written != null) {
                         files.add(written);
                     }
+
+                    //famecrave: generate service and dao
+                    try {
+                        String daoFilename = config.modelFileFolder() + File.separator + ".." + File.separator + "dao" + File.separator + config.toModelFilename(modelName) + "Repository.java";
+                        processTemplateToFile(models, "Repository.mustache", daoFilename);
+
+                        String serviceFilename = config.modelFileFolder() + File.separator + ".." + File.separator + "service" + File.separator + config.toModelFilename(modelName) + "Service.java";
+                        processTemplateToFile(models, "apiService.mustache", serviceFilename);
+
+                        String serviceImplFilename = config.modelFileFolder() + File.separator + ".." + File.separator + "service" + File.separator + "impl" + File.separator + config.toModelFilename(modelName) + "ServiceImpl.java";
+                        processTemplateToFile(models, "apiServiceImpl.mustache", serviceImplFilename);
+                    } catch (Exception e) {
+                        System.out.println("<<<<<<<<<<<<<<<<<famecrave:ERROR WHILE GENERATING CUSTOM CLASSES>>>>>>>>>>>>>>>>>>>>>>>>>");
+                    }
+
                 }
                 if(generateModelTests) {
                     generateModelTests(files, models, modelName);

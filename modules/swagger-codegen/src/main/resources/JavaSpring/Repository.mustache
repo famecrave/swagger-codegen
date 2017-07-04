@@ -1,0 +1,13 @@
+package {{daoPackage}};
+
+import {{modelPackage}}.{{classname}};
+import org.springframework.data.repository.CrudRepository;
+
+import javax.transaction.Transactional;
+
+/**
+ * Created by famecrave on {{generatedDate}}.
+ */
+@Transactional
+public interface {{classname}}Repository extends CrudRepository<{{classname}}, Long> {
+}
