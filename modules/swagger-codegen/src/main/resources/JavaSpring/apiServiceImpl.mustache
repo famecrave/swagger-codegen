@@ -1,13 +1,18 @@
 package {{servicePackage}}.impl;
 
-import {{modelPackage}}.{{classname}};
+import {{daoPackage}}.{{classname}}Repository;
 import {{servicePackage}}.{{classname}}Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 /**
  * Created by famecrave on {{generatedDate}}.
  */
 @Service
+@Transactional
 public class {{classname}}ServiceImpl implements {{classname}}Service {
+    @Autowired
+    private {{classname}}Repository {{customPropertyName}}Repository;
 }

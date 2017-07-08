@@ -12,13 +12,18 @@ import {{utilPackage}}.CustomJSONDateSerializer;
 import {{utilPackage}}.CustomJSONDateDeserializer;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by famecrave on {{generatedDate}}.
  */
 @MappedSuperclass
-public abstract class BaseModel {
+public abstract class BaseModel {{#serializableModel}}implements Serializable{{/serializableModel}}  {
+    {{#serializableModel}}
+    private static final long serialVersionUID = 1L;
+    {{/serializableModel}}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

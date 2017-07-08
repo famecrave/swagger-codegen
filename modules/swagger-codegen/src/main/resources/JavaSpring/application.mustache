@@ -4,6 +4,7 @@ server.port={{serverPort}}
 spring.jackson.date-format={{basePackage}}.util.RFC3339DateFormat
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS=false
 
+spring.jpa.hibernate.ddl-auto=update
 spring.datasource.url=jdbc:mysql://localhost:3306/aj?useSSL=false
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 #spring.datasource.driver-class-name=com.mysql.jdbc.Driver
@@ -12,7 +13,7 @@ spring.datasource.password=Nsuren4u
 app.data.format=dd-MM-yyyy hh:mm:ss
 
 
-logging.level.=DEBUG
+logging.level.=ERROR
 logging.level.org.springframework.web=ERROR
 logging.level.jc=ERROR
 # Logging pattern for the console

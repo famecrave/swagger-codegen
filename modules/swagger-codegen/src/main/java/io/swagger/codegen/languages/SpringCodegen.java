@@ -176,8 +176,8 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
 
         if (!this.interfaceOnly) {
             if (library.equals(DEFAULT_LIBRARY)) {
-                supportingFiles.add(new SupportingFile("homeController.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "HomeController.java"));
+                /*supportingFiles.add(new SupportingFile("homeController.mustache",
+                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "HomeController.java"));*/
                 supportingFiles.add(new SupportingFile("swagger2SpringBoot.mustache",
                         (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "Swagger2SpringBoot.java"));
                 supportingFiles.add(new SupportingFile("RFC3339DateFormat.mustache",
@@ -344,7 +344,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         }
 
         String host = swagger.getHost();
-        String port = "8080";
+        String port = "8789";
         if (host != null) {
             String[] parts = host.split(":");
             if (parts.length > 1) {

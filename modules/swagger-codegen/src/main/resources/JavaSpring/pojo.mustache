@@ -6,10 +6,7 @@
 /**
  * Created by famecrave on {{generatedDate}}.
  */
-public class {{classname}} extends BaseModel {{#serializableModel}}implements Serializable{{/serializableModel}} {
-{{#serializableModel}}
-  private static final long serialVersionUID = 1L;
-{{/serializableModel}}
+public class {{classname}} extends BaseModel {
   {{#vars}}
     {{#isEnum}}
     {{^isContainer}}
@@ -48,10 +45,13 @@ public class {{classname}} extends BaseModel {{#serializableModel}}implements Se
     @SerializedName("{{baseName}}")
     {{/gson}}
   {{#isContainer}}
-  private {{{datatypeWithEnum}}} {{name}}{{#required}} = {{{defaultValue}}}{{/required}}{{^required}} = null{{/required}};
+  private {{{datatypeWithEnum}}} {{name}};
   {{/isContainer}}
   {{^isContainer}}
-  private {{{datatypeWithEnum}}} {{name}} = {{{defaultValue}}};
+  {{#isEnum}}
+  @Enumerated(EnumType.STRING)
+  {{/isEnum}}
+  private {{{datatypeWithEnum}}} {{name}};
   {{/isContainer}}
 
   {{/vars}}

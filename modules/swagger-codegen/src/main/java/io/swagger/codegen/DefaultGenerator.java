@@ -426,6 +426,9 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
                         String serviceFilename = config.modelFileFolder() + File.separator + ".." + File.separator + "service" + File.separator + config.toModelFilename(modelName) + "Service.java";
                         processTemplateToFile(models, "apiService.mustache", serviceFilename);
 
+                        //famecrave:set customModelName to use in api.mustache
+                        String tempModelName = (String)models.get("classname");
+                        models.put("customPropertyName", tempModelName.substring(0, 1).toLowerCase() + tempModelName.substring(1));
                         String serviceImplFilename = config.modelFileFolder() + File.separator + ".." + File.separator + "service" + File.separator + "impl" + File.separator + config.toModelFilename(modelName) + "ServiceImpl.java";
                         processTemplateToFile(models, "apiServiceImpl.mustache", serviceImplFilename);
                     } catch (Exception e) {
@@ -457,6 +460,7 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
         }
         Map<String, List<CodegenOperation>> paths = processPaths(swagger.getPaths());
         Set<String> apisToGenerate = null;
+        //famecrave: changed default swagger api.mustache
         String apiNames = System.getProperty("apis");
         if(apiNames != null && !apiNames.isEmpty()) {
             apisToGenerate = new HashSet<String>(Arrays.asList(apiNames.split(",")));
@@ -519,6 +523,11 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
                     if (!config.shouldOverwrite(filename) && new File(filename).exists()) {
                         LOGGER.info("Skipped overwriting " + filename);
                         continue;
+                    }
+                    //famecrave:set customModelName to use in api.mustache
+                    if(operation.get("classVarName") != null) {
+                        String customModelName = (String)operation.get("classVarName");
+                        operation.put("customModelName", customModelName.substring(0, 1).toUpperCase() + customModelName.substring(1));
                     }
 
                     File written = processTemplateToFile(operation, templateName, filename);
